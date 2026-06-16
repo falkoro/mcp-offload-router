@@ -28,6 +28,7 @@ const configSchema = z.object({
 
 export type Config = z.infer<typeof configSchema>;
 export type ProviderName = "minimax" | "syntheticnew";
+export const PROVIDER_NAMES: ProviderName[] = ["minimax", "syntheticnew"];
 
 export function loadConfig(): Config {
   const raw = {

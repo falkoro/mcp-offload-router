@@ -4,7 +4,7 @@ import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
  * JSON-RPC server error code for rate-limiting.
  * The MCP SDK does not expose a named constant for this case.
  */
-const RATE_LIMITED_ERROR_CODE = -32002;
+export const RATE_LIMITED_ERROR_CODE = -32002;
 
 /**
  * Returns an MCP error indicating all providers are currently rate-limited.
