@@ -104,6 +104,17 @@ describe("provider adapters", () => {
     ).rejects.toThrow("Provider error (minimax): HTTP 401: Unauthorized");
   });
 
+  it("throws providerTimeoutError on AbortError", async () => {
+    const abortError = new Error("The operation was aborted");
+    abortError.name = "AbortError";
+    vi.mocked(fetch).mockRejectedValueOnce(abortError);
+
+    const adapter = createMiniMaxAdapter(minimaxConfig);
+    await expect(
+      adapter.call({ systemPrompt: "", userPrompt: "", maxTokens: 100 })
+    ).rejects.toThrow("Provider timeout: minimax");
+  });
+
   it("sends correct request body and headers", async () => {
     const fetchMock = vi.mocked(fetch).mockResolvedValueOnce({
       ok: true,
@@ -136,6 +147,7 @@ describe("provider adapters", () => {
           ],
           max_tokens: 100,
         }),
+        signal: expect.any(Object),
       }
     );
   });

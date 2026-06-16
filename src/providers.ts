@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { Config, ProviderName } from "./config.js";
-import { providerError } from "./errors.js";
+import { providerError, providerTimeoutError } from "./errors.js";
 
 export interface ProviderRequest {
   systemPrompt: string;
@@ -83,15 +83,28 @@ function createOpenAiStyleAdapter(
     name,
     async call({ systemPrompt, userPrompt, maxTokens }) {
       const body = buildChatBody(config.model, systemPrompt, userPrompt, maxTokens);
-      const response = await fetch(`${config.baseUrl}/chat/completions`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${config.apiKey}`,
-        },
-        body: JSON.stringify(body),
-      });
-      return parseProviderResponse(name, response);
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 30_000);
+
+      try {
+        const response = await fetch(`${config.baseUrl}/chat/completions`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${config.apiKey}`,
+          },
+          body: JSON.stringify(body),
+          signal: controller.signal,
+        });
+        return parseProviderResponse(name, response);
+      } catch (err) {
+        if (err instanceof Error && err.name === "AbortError") {
+          throw providerTimeoutError(name);
+        }
+        throw err;
+      } finally {
+        clearTimeout(timeout);
+      }
     },
   };
 }
