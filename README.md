@@ -1,6 +1,6 @@
 # MCP Offload Router
 
-Self-hosted MCP server that routes offload tasks from Claude Code, Kimi Code, and Codex CLI to MiniMax and SyntheticNew subscriptions.
+Self-hosted MCP server that routes offload tasks from Claude Code, Cursor, Kimi Code, and Codex CLI to MiniMax and SyntheticNew subscriptions.
 
 ## Prerequisites
 
@@ -15,11 +15,33 @@ Self-hosted MCP server that routes offload tasks from Claude Code, Kimi Code, an
    - For MCP stdio integration: `docker compose run --rm mcp-offload-router`
    - `docker compose up` is intended for HTTP/SSE mode, which is not implemented in v1.
 
-> **Note:** v1 only supports `TRANSPORT=stdio`. Set `TRANSPORT=stdio` in your `.env` for Claude Code / Kimi Code / Codex CLI integration.
+> **Note:** v1 only supports `TRANSPORT=stdio`. Set `TRANSPORT=stdio` in your `.env` for Claude Code / Cursor / Kimi Code / Codex CLI integration.
 
 ## Claude Code configuration
 
 Add to your Claude Code MCP config (e.g., `~/.claude/config.json`), replacing `/absolute/path/to/mcp-offload-router` with your clone path:
+
+```json
+{
+  "mcpServers": {
+    "offload-router": {
+      "command": "docker",
+      "args": [
+        "compose",
+        "-f",
+        "/absolute/path/to/mcp-offload-router/docker-compose.yml",
+        "run",
+        "--rm",
+        "mcp-offload-router"
+      ]
+    }
+  }
+}
+```
+
+## Cursor configuration
+
+Add to your Cursor MCP config (e.g., `~/.cursor/mcp.json`), replacing `/absolute/path/to/mcp-offload-router` with your clone path:
 
 ```json
 {
