@@ -1,0 +1,13 @@
+services:
+  mcp-offload-router:
+    build: .
+    container_name: mcp-offload-router
+    env_file:
+      - path: .env
+        required: false
+    # restart disabled for stdio-only v1; enable when SSE transport is implemented
+    # restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    stdin_open: true
+    tty: true
