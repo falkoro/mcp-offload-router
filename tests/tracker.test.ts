@@ -45,9 +45,8 @@ describe("UsageTracker", () => {
     const now = Date.now();
     const tracker = new UsageTracker({ minimax: limits });
     tracker.markRateLimited("minimax", now);
-    const retryAfter = tracker.getRetryAfter("minimax");
-    expect(retryAfter).toBeGreaterThanOrEqual(9);
-    expect(retryAfter).toBeLessThanOrEqual(10);
+    const retryAfter = tracker.getRetryAfter("minimax", now);
+    expect(retryAfter).toBe(10);
   });
 
   it("throws for unknown provider", () => {
