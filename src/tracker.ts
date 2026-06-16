@@ -22,13 +22,22 @@ function validateLimits(name: string, limits: ProviderLimits): void {
   }
 }
 
+export interface UsageTrackerOptions {
+  onUsage?: (provider: string, tokensUsed: number, timestamp: number) => void;
+}
+
 export class UsageTracker {
   private states: Map<string, ProviderState>;
   private limits: Map<string, ProviderLimits>;
+  private onUsage?: UsageTrackerOptions["onUsage"];
 
-  constructor(providers: Record<string, ProviderLimits>) {
+  constructor(
+    providers: Record<string, ProviderLimits>,
+    options: UsageTrackerOptions = {}
+  ) {
     this.states = new Map();
     this.limits = new Map();
+    this.onUsage = options.onUsage;
     const now = Date.now();
     for (const [name, limits] of Object.entries(providers)) {
       validateLimits(name, limits);
@@ -87,6 +96,7 @@ export class UsageTracker {
     state.requestTimestamps.push(now);
     state.tokenEntries.push({ timestamp: now, tokens: tokensUsed });
     state.tokensToday += tokensUsed;
+    this.onUsage?.(name, tokensUsed, now);
   }
 
   markRateLimited(name: string, now: number = Date.now()): void {
