@@ -20,15 +20,19 @@ const providerConfigSchema = z.object({
 const configSchema = z.object({
   transport: z.enum(["stdio", "sse"]).default("stdio"),
   port: z.coerce.number().int().positive().max(65535).default(3000),
-  defaultProvider: z.enum(["auto", "minimax", "syntheticnew", "zai"]).default("auto"),
+  defaultProvider: z.enum(["auto", "minimax", "syntheticnew", "zai", "grok"]).default("auto"),
   persistUsage: envBoolean.default(false),
   minimax: providerConfigSchema,
   syntheticnew: providerConfigSchema,
   zai: providerConfigSchema,
+  grok: providerConfigSchema,
 });
 
 export type Config = z.infer<typeof configSchema>;
-export type ProviderName = "minimax" | "syntheticnew" | "zai";
+export type ProviderName = "minimax" | "syntheticnew" | "zai" | "grok";
+// Providers eligible for the "auto" rotation (cheap/unlimited backends). grok is
+// a real-cost premium backend reached via the Hermes proxy, so it is selectable
+// explicitly (provider_preference: "grok") but excluded from auto.
 export const PROVIDER_NAMES: ProviderName[] = ["minimax", "syntheticnew", "zai"];
 
 export function loadConfig(): Config {
@@ -63,6 +67,19 @@ export function loadConfig(): Config {
       tpm: process.env.ZAI_TPM,
       dailyTokens: process.env.ZAI_DAILY_TOKENS,
       cooldownSeconds: process.env.ZAI_COOLDOWN_SECONDS,
+    },
+    // grok via the Hermes OAuth proxy on spot-tech-ci (reached through the local
+    // grok-hermes-tunnel at 127.0.0.1:8649). No secret needed: the proxy mints
+    // the SuperGrok bearer itself, so a literal "hermes" token authenticates and
+    // the URL/model are fixed. Defaults make grok work with no client env changes.
+    grok: {
+      apiKey: process.env.GROK_API_KEY ?? "hermes",
+      baseUrl: process.env.GROK_BASE_URL ?? "http://127.0.0.1:8649/v1",
+      model: process.env.GROK_MODEL ?? "grok-4.20-0309-non-reasoning",
+      rpm: process.env.GROK_RPM ?? 60,
+      tpm: process.env.GROK_TPM ?? 100000,
+      dailyTokens: process.env.GROK_DAILY_TOKENS ?? 1000000,
+      cooldownSeconds: process.env.GROK_COOLDOWN_SECONDS ?? 60,
     },
   };
 

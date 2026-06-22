@@ -67,7 +67,7 @@ All tools accept these parameters:
 
 - `prompt` (string, required) — the main instruction or content
 - `context` (string, optional) — additional background context
-- `provider_preference` ("auto" | "minimax" | "syntheticnew" | "zai", optional) — default is `"auto"`
+- `provider_preference` ("auto" | "minimax" | "syntheticnew" | "zai" | "grok", optional) — default is `"auto"`. `grok` (Grok 4.20 via the Hermes OAuth proxy) is a real-cost premium backend: selectable explicitly but excluded from the `auto` rotation.
 - `max_tokens` (number, optional) — default is `2048`
 
 Tools:
