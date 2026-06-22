@@ -20,15 +20,16 @@ const providerConfigSchema = z.object({
 const configSchema = z.object({
   transport: z.enum(["stdio", "sse"]).default("stdio"),
   port: z.coerce.number().int().positive().max(65535).default(3000),
-  defaultProvider: z.enum(["auto", "minimax", "syntheticnew"]).default("auto"),
+  defaultProvider: z.enum(["auto", "minimax", "syntheticnew", "zai"]).default("auto"),
   persistUsage: envBoolean.default(false),
   minimax: providerConfigSchema,
   syntheticnew: providerConfigSchema,
+  zai: providerConfigSchema,
 });
 
 export type Config = z.infer<typeof configSchema>;
-export type ProviderName = "minimax" | "syntheticnew";
-export const PROVIDER_NAMES: ProviderName[] = ["minimax", "syntheticnew"];
+export type ProviderName = "minimax" | "syntheticnew" | "zai";
+export const PROVIDER_NAMES: ProviderName[] = ["minimax", "syntheticnew", "zai"];
 
 export function loadConfig(): Config {
   const raw = {
@@ -53,6 +54,15 @@ export function loadConfig(): Config {
       tpm: process.env.SYNTHETICNEW_TPM,
       dailyTokens: process.env.SYNTHETICNEW_DAILY_TOKENS,
       cooldownSeconds: process.env.SYNTHETICNEW_COOLDOWN_SECONDS,
+    },
+    zai: {
+      apiKey: process.env.ZAI_API_KEY ?? process.env.GLM_API_KEY,
+      baseUrl: process.env.ZAI_BASE_URL,
+      model: process.env.ZAI_MODEL,
+      rpm: process.env.ZAI_RPM,
+      tpm: process.env.ZAI_TPM,
+      dailyTokens: process.env.ZAI_DAILY_TOKENS,
+      cooldownSeconds: process.env.ZAI_COOLDOWN_SECONDS,
     },
   };
 

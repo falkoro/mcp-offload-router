@@ -77,7 +77,7 @@ async function parseProviderResponse(
 
 function createOpenAiStyleAdapter(
   name: ProviderName,
-  config: Config["minimax"] | Config["syntheticnew"]
+  config: Config["minimax"] | Config["syntheticnew"] | Config["zai"]
 ): ProviderAdapter {
   return {
     name,
@@ -115,4 +115,8 @@ export function createMiniMaxAdapter(config: Config["minimax"]): ProviderAdapter
 
 export function createSyntheticNewAdapter(config: Config["syntheticnew"]): ProviderAdapter {
   return createOpenAiStyleAdapter("syntheticnew", config);
+}
+
+export function createZaiAdapter(config: Config["zai"]): ProviderAdapter {
+  return createOpenAiStyleAdapter("zai", config);
 }

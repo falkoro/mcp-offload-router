@@ -1,7 +1,7 @@
 import { appendFileSync } from "node:fs";
 import { loadConfig } from "./config.js";
 import { UsageTracker, type UsageTrackerOptions } from "./tracker.js";
-import { createMiniMaxAdapter, createSyntheticNewAdapter } from "./providers.js";
+import { createMiniMaxAdapter, createSyntheticNewAdapter, createZaiAdapter } from "./providers.js";
 import { createRouter } from "./router.js";
 import { startStdioServer } from "./server.js";
 
@@ -20,6 +20,7 @@ async function main() {
     {
       minimax: config.minimax,
       syntheticnew: config.syntheticnew,
+      zai: config.zai,
     },
     trackerOptions
   );
@@ -27,6 +28,7 @@ async function main() {
   const adapters = [
     createMiniMaxAdapter(config.minimax),
     createSyntheticNewAdapter(config.syntheticnew),
+    createZaiAdapter(config.zai),
   ];
 
   const router = createRouter(adapters, tracker);

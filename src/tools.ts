@@ -6,7 +6,7 @@ import type { ProviderName } from "./config.js";
 export const toolArgsSchema = z.object({
   prompt: z.string().min(1),
   context: z.string().optional(),
-  provider_preference: z.enum(["auto", "minimax", "syntheticnew"]).optional(),
+  provider_preference: z.enum(["auto", "minimax", "syntheticnew", "zai"]).optional(),
   max_tokens: z.number().int().positive().optional(),
 });
 
@@ -34,7 +34,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
       properties: {
         prompt: { type: "string", description: "Text to summarize" },
         context: { type: "string", description: "Optional additional context" },
-        provider_preference: { type: "string", enum: ["auto", "minimax", "syntheticnew"] },
+        provider_preference: { type: "string", enum: ["auto", "minimax", "syntheticnew", "zai"] },
         max_tokens: { type: "number" },
       },
       required: ["prompt"],
@@ -49,7 +49,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
       properties: {
         prompt: { type: "string", description: "Text and instructions" },
         context: { type: "string" },
-        provider_preference: { type: "string", enum: ["auto", "minimax", "syntheticnew"] },
+        provider_preference: { type: "string", enum: ["auto", "minimax", "syntheticnew", "zai"] },
         max_tokens: { type: "number" },
       },
       required: ["prompt"],
@@ -64,7 +64,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
       properties: {
         prompt: { type: "string", description: "Code generation prompt" },
         context: { type: "string" },
-        provider_preference: { type: "string", enum: ["auto", "minimax", "syntheticnew"] },
+        provider_preference: { type: "string", enum: ["auto", "minimax", "syntheticnew", "zai"] },
         max_tokens: { type: "number" },
       },
       required: ["prompt"],
@@ -79,7 +79,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
       properties: {
         prompt: { type: "string", description: "Code to review" },
         context: { type: "string" },
-        provider_preference: { type: "string", enum: ["auto", "minimax", "syntheticnew"] },
+        provider_preference: { type: "string", enum: ["auto", "minimax", "syntheticnew", "zai"] },
         max_tokens: { type: "number" },
       },
       required: ["prompt"],
@@ -94,7 +94,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
       properties: {
         prompt: { type: "string", description: "Question" },
         context: { type: "string", description: "Context to search" },
-        provider_preference: { type: "string", enum: ["auto", "minimax", "syntheticnew"] },
+        provider_preference: { type: "string", enum: ["auto", "minimax", "syntheticnew", "zai"] },
         max_tokens: { type: "number" },
       },
       required: ["prompt"],
@@ -109,7 +109,7 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
       properties: {
         prompt: { type: "string", description: "Task description" },
         context: { type: "string" },
-        provider_preference: { type: "string", enum: ["auto", "minimax", "syntheticnew"] },
+        provider_preference: { type: "string", enum: ["auto", "minimax", "syntheticnew", "zai"] },
         max_tokens: { type: "number" },
       },
       required: ["prompt"],
